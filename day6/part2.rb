@@ -4,10 +4,6 @@ lines = $stdin.each_line.to_a
 time = lines[0].scan(/\d/).join('').to_i
 distance = lines[1].scan(/\d/).join('').to_i
 
-ways_to_win = (0..time).map do |time_charging|
-  time_left_after_charging = time - time_charging
-  distance_travelled = time_left_after_charging * time_charging
-  distance_travelled > distance
-end.count(true)
-
-puts ways_to_win
+range_start = (0.5 * (time - Math.sqrt(time ** 2 - (4 * (distance + 1))))).ceil
+range_end = (0.5 * (time + Math.sqrt(time ** 2 - (4 * (distance + 1))))).floor
+puts range_end - range_start + 1
