@@ -33,25 +33,15 @@ class Coord
   alias eql? ==
 end
 
-def opposite(heading)
-  {
-    :north => :south,
-    :south => :north,
-    :east => :west,
-    :west => :east
-  }[heading]
-end
-
 def get_path_length(map, start, cur, heading)
   length = 0
   loop do
     cur = cur + heading
     return nil if map[cur].nil?
-    heading = map[cur].find {|h| h != -heading}
-    return nil if heading.nil?
-    if cur == start
-      return length
-    end
+    return length if cur == start
+    headings = map[cur].select {|h| h != -heading}
+    return nil unless headings.size == 1
+    heading = headings[0]
     length += 1
   end
   length
