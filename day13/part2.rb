@@ -6,19 +6,17 @@ def get_reflection_point(map)
   (1...map.length).find do |p|
     max_offset = [p, map.length - p].min
     (0...max_offset).map do |offset|
-      map[p - offset - 1].chars.zip(map[p + offset].chars).count {|a, b| a != b}
+      map[p - offset - 1].zip(map[p + offset]).count {|a, b| a != b}
     end.sum == NUM_SMUDGES
   end
 end
 
 maps = $stdin.read.split("\n\n").map do |map_src|
-  rows = map_src.split("\n")
-  cols = rows.map {|row| row.split('')}.transpose.map {|col| col.join('')}
-  { rows: rows, cols: cols }
+  map_src.split("\n").map(&:chars)
 end
 
 summaries = maps.map do |map|
-  get_reflection_point(map[:cols]) || (100 * get_reflection_point(map[:rows]))
+  get_reflection_point(map.transpose) || (100 * get_reflection_point(map))
 end
 
 puts summaries.sum
