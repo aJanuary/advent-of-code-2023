@@ -1,13 +1,14 @@
 #!/usr/bin/env ruby
 
+NUM_SMUDGES = 1
+
 def get_reflection_point(map)
-  (0...map.length - 1).each do |p|
-    max_offset = [p, map.length - p - 2].min
-    return (p + 1) if (0..max_offset).map do |offset|
-      map[p - offset].chars.zip(map[p + offset + 1].chars).count {|a, b| a != b}
-    end.sum == 1
+  (1...map.length).find do |p|
+    max_offset = [p, map.length - p].min
+    (0...max_offset).map do |offset|
+      map[p - offset - 1].chars.zip(map[p + offset].chars).count {|a, b| a != b}
+    end.sum == NUM_SMUDGES
   end
-  nil
 end
 
 maps = $stdin.read.split("\n\n").map do |map_src|
