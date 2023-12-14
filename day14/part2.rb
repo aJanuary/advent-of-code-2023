@@ -19,57 +19,12 @@ def roll_north(map)
   end  
 end
 
-def roll_east(map)
-  (0...map.size).each do |y|
-    (map[y].size - 2).downto(0).each do |x|
-      if map[y][x] == 'O'
-        new_x = x
-        while new_x < map[y].size - 1 && map[y][new_x + 1] == '.'
-          new_x += 1
-        end
-        map[y][x] = '.'
-        map[y][new_x] = 'O'
-      end
-    end
-  end  
-end
-
-def roll_south(map)
-  (map.size - 2).downto(0).each do |y|
-    (0...map[y].size).each do |x|
-      if map[y][x] == 'O'
-        new_y = y
-        while new_y < map.size - 1 && map[new_y + 1][x] == '.'
-          new_y += 1
-        end
-        map[y][x] = '.'
-        map[new_y][x] = 'O'
-      end
-    end
-  end  
-end
-
-def roll_west(map)
-  (0...map.size).each do |y|
-    (1...map[y].size).each do |x|
-      if map[y][x] == 'O'
-        new_x = x
-        while new_x > 0 && map[y][new_x - 1] == '.'
-          new_x -= 1
-        end
-        map[y][x] = '.'
-        map[y][new_x] = 'O'
-      end
-    end
-  end  
-end
-
 def cycle(map)
   map = map.map(&:dup)
-  roll_north(map)
-  roll_west(map)
-  roll_south(map)
-  roll_east(map)
+  4.times do
+    roll_north(map)
+    map = map.transpose.map(&:reverse)
+  end
   map
 end
 
@@ -77,7 +32,7 @@ map = $stdin.each_line.map(&:chomp).map(&:chars)
 
 seen_tally = Hash.new {|h, k| h[k] = []}
 
-(0...Float::INFINITY).each do |i|
+(0..TARGET_CYCLES).each do |i|
   map = cycle(map)
   seen_tally[map] << i
   break if seen_tally[map].size == 2
